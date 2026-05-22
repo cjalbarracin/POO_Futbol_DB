@@ -11,7 +11,7 @@ public class DBConnection {
     private static final String PASS = "npg_Om2ocUqjXE4C";
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASS)
+        return DriverManager.getConnection(URL, USER, PASS);
     }
 
     //
