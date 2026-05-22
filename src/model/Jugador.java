@@ -1,18 +1,18 @@
 package model;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class celular {
 
     private int id;
     private String marca;
-    private string modelo;
+    private String modelo;
     private int camara;
     private int bateria;
     private Timestamp creado;
 
-    public celular (int id, String marca, String modelo, int camara, int bateria, Timestamp creado) {
+    // Constructor completo para leer de la base de datos
+    public celular(int id, String marca, String modelo, int camara, int bateria, Timestamp creado) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
@@ -21,15 +21,15 @@ public class celular {
         this.creado = creado;
     }
 
+
     public celular(String marca, String modelo, int camara, int bateria) {
-        this.marca = marca ;
-        this.modelo = modelo ;
+        this.marca = marca;
+        this.modelo = modelo;
         this.camara = camara;
-        this.bateria = bateria ;
+        this.bateria = bateria;
     }
 
-
-    //Getters para poder leer datos de un jugador en la ase3 de datos
+    // Getters para poder leer datos en la base de datos
     public int getId() {
         return id;
     }
@@ -38,22 +38,19 @@ public class celular {
         return marca;
     }
 
-    public int getmodelo() {
+    public String getmodelo() {
         return modelo;
     }
 
-    public String getcamara() {
+    public int getcamara() {
         return camara;
     }
 
-    public Boolean getbateria() {
+    public int getbateria() { // Cambiado a int
         return bateria;
     }
 
     public Timestamp getCreado() {
         return creado;
-    }
-
-
     }
 }
