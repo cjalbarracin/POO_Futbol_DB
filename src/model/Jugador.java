@@ -3,29 +3,29 @@ package model;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class Jugador {
+public class celular {
 
     private int id;
-    private String nombre;
-    private int dorsal;
-    private String posicion;
-    private Boolean activo;
+    private String marca;
+    private string modelo;
+    private int camara;
+    private int bateria;
     private Timestamp creado;
 
-    public Jugador(int id, String nombre, int dorsal, String posicion, Boolean activo, Timestamp creado) {
+    public celular (int id, String marca, String modelo, int camara, int bateria, Timestamp creado) {
         this.id = id;
-        this.nombre = nombre;
-        this.dorsal = dorsal;
-        this.posicion = posicion;
-        this.activo = activo;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.camara = camara;
+        this.bateria = bateria;
         this.creado = creado;
     }
 
-    public Jugador(String nombre, int dorsal, String posicion, Boolean activo) {
-        this.nombre = nombre;
-        this.dorsal = dorsal;
-        this.posicion = posicion;
-        this.activo = activo;
+    public celular(String marca, String modelo, int camara, int bateria) {
+        this.marca = marca ;
+        this.modelo = modelo ;
+        this.camara = camara;
+        this.bateria = bateria ;
     }
 
 
@@ -34,43 +34,26 @@ public class Jugador {
         return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getmarca() {
+        return marca;
     }
 
-    public int getDorsal() {
-        return dorsal;
+    public int getmodelo() {
+        return modelo;
     }
 
-    public String getPosicion() {
-        return posicion;
+    public String getcamara() {
+        return camara;
     }
 
-    public Boolean getActivo() {
-        return activo;
+    public Boolean getbateria() {
+        return bateria;
     }
 
     public Timestamp getCreado() {
         return creado;
     }
 
-    public void setDorsal(int dorsal) {
-        this.dorsal = dorsal;
-    }
 
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    @Override
-    public String toString() {
-        return "Jugador{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", dorsal=" + dorsal +
-                ", posicion='" + posicion + '\'' +
-                ", activo=" + activo +
-                ", creado=" + creado +
-                '}';
     }
 }
