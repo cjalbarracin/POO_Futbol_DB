@@ -2,45 +2,70 @@ import db.operaciones.TiendaDAO;
 import model.celular;
 import model.inventario;
 import java.util.Scanner;
+import java.util.List;
 
 public class Principal {
     public static void main(String[] args) {
         TiendaDAO dao = new TiendaDAO();
         Scanner leer = new Scanner(System.in);
+        boolean salir = false;
 
-        // 1. PEDIR DATOS DEL CELULAR
-        System.out.println("=== REGISTRO DE CELULAR ===");
-        System.out.println("Ingrese la marca:");
-        String marca = leer.nextLine();
-        System.out.println("Ingrese el modelo:");
-        String modelo = leer.nextLine();
-        System.out.println("Ingrese los megapixeles de la camara:");
-        int camara = leer.nextInt();
-        System.out.println("Ingrese la capacidad de la bateria:");
-        int bateria = leer.nextInt();
+        while (!salir) {
+            System.out.println("\n=== MENÚ TIENDA DE CELULARES ===");
+            System.out.println("1. Registrar nuevo celular e inventario");
+            System.out.println("2. Consultar todos los celulares");
+            System.out.println("3. Filtrar celulares por marca");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
 
-        // Guardar el celular y CAPTURAR el ID que la base de datos asignó
-        celular c = new celular(marca, modelo, camara, bateria);
-        int idGenerado = dao.insertarCelular(c); // <--- ESTO ES LO NUEVO
+            int opcion = leer.nextInt();
+            leer.nextLine(); // Limpiar el buffer
 
-        if (idGenerado != -1) {
-            System.out.println("¡Celular guardado! ID asignado automáticamente: " + idGenerado);
+            switch (opcion) {
+                case 1:
+                    registrarNuevo(dao, leer);
+                    break;
+                case 2:
+                    System.out.println("\n--- LISTA DE CELULARES ---");
+                    List<celular> lista = dao.listarTodos();
+                    for (celular c : lista) {
+                        System.out.println("- " + c.getMarca() + " " + c.getModelo() + " | Cam: " + c.getCamara() + "MP");
+                    }
+                    break;
+                case 3:
+                    System.out.print("Ingrese la marca a buscar: ");
+                    String marca = leer.nextLine();
+                    List<celular> filtrados = dao.filtrarPorMarca(marca);
+                    for (celular c : filtrados) {
+                        System.out.println(">> " + c.getMarca() + " " + c.getModelo());
+                    }
+                    break;
+                case 4:
+                    salir = true;
+                    System.out.println("¡Hasta luego!");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        }
+    }
 
-            // 2. PEDIR DATOS DEL INVENTARIO
-            System.out.println("\n=== REGISTRO DE INVENTARIO ===");
-            System.out.println("Ingrese el almacenamiento (GB):");
-            int almacenamiento = leer.nextInt();
-            System.out.println("Ingrese el precio:");
-            double precio = leer.nextDouble();
-            System.out.println("Ingrese la memoria RAM (GB):");
-            int ram = leer.nextInt();
+    // Método auxiliar para mantener el código limpio
+    private static void registrarNuevo(TiendaDAO dao, Scanner leer) {
+        System.out.println("\n--- REGISTRO DE CELULAR ---");
+        System.out.print("Marca: "); String marca = leer.nextLine();
+        System.out.print("Modelo: "); String modelo = leer.nextLine();
+        System.out.print("Megapíxeles: "); int camara = leer.nextInt();
+        System.out.print("Batería: "); int bateria = leer.nextInt();
 
-            // Usamos el idGenerado que capturamos antes
-            inventario i = new inventario(idGenerado, almacenamiento, precio, ram);
-            dao.insertarInventario(i);
-            System.out.println("¡Inventario registrado con éxito!");
-        } else {
-            System.out.println("Error: No se pudo guardar el celular.");
+        int id = dao.insertarCelular(new celular(marca, modelo, camara, bateria));
+
+        if (id != -1) {
+            System.out.println("Celular guardado con ID: " + id);
+            System.out.print("Almacenamiento (GB): "); int almc = leer.nextInt();
+            System.out.print("Precio: "); double precio = leer.nextDouble();
+            System.out.print("RAM (GB): "); int ram = leer.nextInt();
+            dao.insertarInventario(new inventario(id, almc, precio, ram));
         }
     }
 }
