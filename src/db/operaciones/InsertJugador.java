@@ -1,30 +1,26 @@
 package db.operaciones;
 
 import db.DBConnection;
-
 import java.sql.*;
 
-public class InsertJugador {
+public class InsertCelular {
     public static void main(String[] args) {
-        String add_jugador = "INSERT INTO jugador (nombre, dorsal, posicion, activo) VALUES (?,?,?,?)";
+        String add_celular = "INSERT INTO celulares (marca, modelo, camara, bateria) VALUES (?,?,?,?)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement query_insert = conn.prepareStatement(add_jugador)
+             PreparedStatement query_insert = conn.prepareStatement(add_celular)
         ) {
-            query_insert.setString(1,"Zidane");
-            query_insert.setInt(2,99);
-            query_insert.setString(3,"CABEZEADOR");
-            query_insert.setBoolean(4, false);
+            query_insert.setString(1, "Apple");
+            query_insert.setString(2, "iPhone 15");
+            query_insert.setInt(3, 48);
+            query_insert.setInt(4, 3349);
             query_insert.executeUpdate();
 
-            System.out.println("Jugador adicionado con exito");
+            System.out.println("Celular adicionado con exito");
         }
         catch (SQLException e)
         {
-            System.err.println("Error: "+e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
-
     }
-
-
 }
