@@ -1,23 +1,24 @@
-import db.operaciones.JugadorDAO;
-import model.Jugador;
+import db.operaciones.TiendaDAO;
+import model.celular;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        JugadorDAO dao = new JugadorDAO();
+        TiendaDAO dao = new TiendaDAO();
 
-        Scanner leer =  new Scanner(System.in);
+        Scanner leer = new Scanner(System.in);
 
-        System.out.println("Ingrese el nombre del jugador");
-        String name = leer.nextLine();
-        System.out.println("Ingrese el dorsal");
-        int dorsal = leer.nextInt();
-        System.out.println("Ingrese el posicion del jugador");
-        String posicion = leer.nextLine();
-        //dao.insertarJugador(new Jugador("KOLO TOURE", 19,"DELANTERO",true));
-        Jugador j = new Jugador(name, dorsal,posicion,true);
+        System.out.println("Ingrese la marca");
+        String marca = leer.nextLine();
+        System.out.println("Ingrese el modelo");
+        String modelo = leer.nextLine();
+        System.out.println("Ingrese los megapixeles de la camara");
+        int camara = leer.nextInt();
+        System.out.println("Ingrese la capacidad de la bateria");
+        int bateria = leer.nextInt();
 
-        dao.insertarJugador(j);
+        celular c = new celular(marca, modelo, camara, bateria);
+
+        dao.insertarCelular(c);
     }
-
 }
