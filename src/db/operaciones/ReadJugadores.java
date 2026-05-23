@@ -6,31 +6,27 @@ public class ReadJugadores {
 
     public static void main(String[] args) {
 
-        String read_query = "SELECT * FROM jugador WHERE activo = FALSE";
+        String read_query = "SELECT * FROM celulares";
 
         try( Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(read_query)
         )
         {
-            System.out.println("ID | NOMBRE | DORSAL");
+            System.out.println("ID | MARCA | MODELO | CREADO");
             while (rs.next())
             {
                 int id = rs.getInt("id");
-                String name = rs.getString("nombre");
-                int dorsal = rs.getInt("dorsal");
+                String marca = rs.getString("marca");
+                String modelo = rs.getString("modelo");
+                Timestamp creado = rs.getTimestamp("creado");
 
-                System.out.println(id + " | " + name + " | " + dorsal);
+                System.out.println(id + " | " + marca + " | " + modelo + " | " + creado);
             }
         }
         catch (SQLException e)
         {
             System.err.println(e.getMessage());
         }
-
-
     }
-
-
-
 }
