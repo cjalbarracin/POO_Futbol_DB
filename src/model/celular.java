@@ -11,7 +11,7 @@ public class celular {
     private int bateria;
     private Timestamp creado;
 
-    // Constructor completo para leer de la base de datos
+
     public celular(int id, String marca, String modelo, int camara, int bateria, Timestamp creado) {
         this.id = id;
         this.marca = marca;
@@ -29,7 +29,7 @@ public class celular {
         this.bateria = bateria;
     }
 
-    // Getters para poder leer datos en la base de datos
+
     public int getId() {
         return id;
     }
