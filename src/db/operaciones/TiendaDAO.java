@@ -7,26 +7,29 @@ import java.sql.*;
 
 public class TiendaDAO {
 
-    public void insertarCelular(celular c){
-        String add_celular = "INSERT INTO celulares (marca, modelo, camara, bateria) VALUES (?,?,?,?)";
+    public int insertarCelular(celular c) {
+        int idGenerado = -1;
+        String sql = "INSERT INTO celular (marca, modelo, camara, bateria) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement query_insert = conn.prepareStatement(add_celular)
-        ) {
-            query_insert.setString(1, c.getmarca());
-            query_insert.setString(2, c.getmodelo());
-            query_insert.setInt(3, c.getcamara());
-            query_insert.setInt(4, c.getbateria());
-            query_insert.executeUpdate();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            System.out.println("Celular adicionado con exito");
+            ps.setString(1, c.getMarca());
+            ps.setString(2, c.getModelo());
+            ps.setInt(3, c.getCamara());
+            ps.setInt(4, c.getBateria());
+            ps.executeUpdate();
+
+            // Aquí recuperamos el ID que Neon asignó automáticamente
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                idGenerado = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch (SQLException e)
-        {
-            System.err.println("Error: " + e.getMessage());
-        }
+        return idGenerado;
     }
-
     public void insertarInventario(inventario i){
         String add_inventario = "INSERT INTO inventario (celular_id, almacenamiento, precio, ram) VALUES (?,?,?,?)";
 
