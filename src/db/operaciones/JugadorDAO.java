@@ -1,35 +1,49 @@
 package db.operaciones;
 
 import db.DBConnection;
-import model.Jugador;
-
+import model.celular;
+import model.inventario;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class JugadorDAO {
+public class TiendaDAO {
 
-    public void insertarJugador(Jugador j){
-        String add_jugador = "INSERT INTO jugador (nombre, dorsal, posicion, activo) VALUES (?,?,?,?)";
+    public void insertarCelular(celular c){
+        String add_celular = "INSERT INTO celulares (marca, modelo, camara, bateria) VALUES (?,?,?,?)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement query_insert = conn.prepareStatement(add_jugador)
+             PreparedStatement query_insert = conn.prepareStatement(add_celular)
         ) {
-            query_insert.setString(1,j.getNombre());
-            query_insert.setInt(2,j.getDorsal());
-            query_insert.setString(3,j.getPosicion());
-            query_insert.setBoolean(4, j.getActivo());
+            query_insert.setString(1, c.getmarca());
+            query_insert.setString(2, c.getmodelo());
+            query_insert.setInt(3, c.getcamara());
+            query_insert.setInt(4, c.getbateria());
             query_insert.executeUpdate();
 
-            System.out.println("Jugador adicionado con exito");
+            System.out.println("Celular adicionado con exito");
         }
         catch (SQLException e)
         {
-            System.err.println("Error: "+e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
-
     }
 
+    public void insertarInventario(inventario i){
+        String add_inventario = "INSERT INTO inventario (celular_id, almacenamiento, precio, ram) VALUES (?,?,?,?)";
 
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement query_insert = conn.prepareStatement(add_inventario)
+        ) {
+            query_insert.setInt(1, i.getCelular_id());
+            query_insert.setInt(2, i.getAlmacenamiento());
+            query_insert.setDouble(3, i.getPrecio());
+            query_insert.setInt(4, i.getRam());
+            query_insert.executeUpdate();
 
+            System.out.println("Inventario adicionado con exito");
+        }
+        catch (SQLException e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 }
