@@ -19,23 +19,28 @@ public class Principal {
         System.out.println("Ingrese la capacidad de la bateria:");
         int bateria = leer.nextInt();
 
-        // Guardar el celular en la base de datos
+        // Guardar el celular y CAPTURAR el ID que la base de datos asignó
         celular c = new celular(marca, modelo, camara, bateria);
-        dao.insertarCelular(c);
+        int idGenerado = dao.insertarCelular(c); // <--- ESTO ES LO NUEVO
 
-        // 2. PEDIR DATOS DEL INVENTARIO
-        System.out.println("\n=== REGISTRO DE INVENTARIO ===");
-        System.out.println("Ingrese el ID del celular base que acabo de crear:");
-        int celular_id = leer.nextInt();
-        System.out.println("Ingrese el almacenamiento (GB):");
-        int almacenamiento = leer.nextInt();
-        System.out.println("Ingrese el precio:");
-        double precio = leer.nextDouble();
-        System.out.println("Ingrese la memoria RAM (GB):");
-        int ram = leer.nextInt();
+        if (idGenerado != -1) {
+            System.out.println("¡Celular guardado! ID asignado automáticamente: " + idGenerado);
 
-        // Guardar el inventario en la base de datos
-        inventario i = new inventario(celular_id, almacenamiento, precio, ram);
-        dao.insertarInventario(i);
+            // 2. PEDIR DATOS DEL INVENTARIO
+            System.out.println("\n=== REGISTRO DE INVENTARIO ===");
+            System.out.println("Ingrese el almacenamiento (GB):");
+            int almacenamiento = leer.nextInt();
+            System.out.println("Ingrese el precio:");
+            double precio = leer.nextDouble();
+            System.out.println("Ingrese la memoria RAM (GB):");
+            int ram = leer.nextInt();
+
+            // Usamos el idGenerado que capturamos antes
+            inventario i = new inventario(idGenerado, almacenamiento, precio, ram);
+            dao.insertarInventario(i);
+            System.out.println("¡Inventario registrado con éxito!");
+        } else {
+            System.out.println("Error: No se pudo guardar el celular.");
+        }
     }
 }
