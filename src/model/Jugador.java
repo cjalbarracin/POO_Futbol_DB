@@ -46,7 +46,7 @@ public class celular {
         return camara;
     }
 
-    public int getbateria() { // Cambiado a int
+    public int getbateria() {
         return bateria;
     }
 
