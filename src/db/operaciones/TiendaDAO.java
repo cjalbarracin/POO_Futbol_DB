@@ -9,56 +9,71 @@ import java.util.List;
 
 public class TiendaDAO {
 
-    // --- MÉTODOS DE INSERCIÓN (Ya los tenías bien) ---
+    // 1. Registro transaccional: Inserta en ambas tablas y vincula el ID
+    public void registrarCelularCompleto(celular c, inventario i) {
+        String sqlCelular = "INSERT INTO celular (marca, modelo, camara, bateria) VALUES (?, ?, ?, ?)";
+        String sqlInventario = "INSERT INTO inventario (celular_id, almacenamiento, precio, ram) VALUES (?, ?, ?, ?)";
 
-    public int insertarCelular(celular c) {
-        int idGenerado = -1;
-        String sql = "INSERT INTO celular (marca, modelo, camara, bateria) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, c.getMarca());
-            ps.setString(2, c.getModelo());
-            ps.setInt(3, c.getCamara());
-            ps.setInt(4, c.getBateria());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) idGenerado = rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
-        return idGenerado;
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false); // Iniciar transacción
+
+            // Insertar celular
+            try (PreparedStatement ps1 = conn.prepareStatement(sqlCelular, Statement.RETURN_GENERATED_KEYS)) {
+                ps1.setString(1, c.getMarca());
+                ps1.setString(2, c.getModelo());
+                ps1.setInt(3, c.getCamara());
+                ps1.setInt(4, c.getBateria());
+                ps1.executeUpdate();
+
+                ResultSet rs = ps1.getGeneratedKeys();
+                if (rs.next()) {
+                    int idGenerado = rs.getInt(1);
+
+                    // Insertar inventario vinculado
+                    try (PreparedStatement ps2 = conn.prepareStatement(sqlInventario)) {
+                        ps2.setInt(1, idGenerado);
+                        ps2.setInt(2, i.getAlmacenamiento());
+                        ps2.setDouble(3, i.getPrecio());
+                        ps2.setInt(4, i.getRam());
+                        ps2.executeUpdate();
+                    }
+                }
+                conn.commit(); // Confirmar ambos cambios
+                System.out.println("Registro exitoso en ambas tablas.");
+            } catch (SQLException e) {
+                conn.rollback(); // Si algo falla, deshacer todo
+                throw e;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void insertarInventario(inventario i){
-        String sql = "INSERT INTO inventario (celular_id, almacenamiento, precio, ram) VALUES (?,?,?,?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, i.getCelular_id());
-            ps.setInt(2, i.getAlmacenamiento());
-            ps.setDouble(3, i.getPrecio());
-            ps.setInt(4, i.getRam());
-            ps.executeUpdate();
-            System.out.println("Inventario adicionado con éxito");
-        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
-    }
+    // 2. Consulta unificada (JOIN): Trae toda la info de ambas tablas
+    public void listarInventarioCompleto() {
+        String sql = "SELECT c.marca, c.modelo, i.precio, i.almacenamiento, i.ram " +
+                "FROM celular c " +
+                "JOIN inventario i ON c.id = i.celular_id";
 
-    // --- MÉTODOS DE CONSULTA (Lo que te faltaba para el parcial) ---
-
-    public List<celular> listarTodos() {
-        List<celular> lista = new ArrayList<>();
-        String sql = "SELECT * FROM celular";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("\n--- LISTADO COMPLETO ---");
             while (rs.next()) {
-                lista.add(new celular(rs.getString("marca"), rs.getString("modelo"),
-                        rs.getInt("camara"), rs.getInt("bateria")));
+                System.out.println("Marca: " + rs.getString("marca") +
+                        " | Modelo: " + rs.getString("modelo") +
+                        " | Precio: $" + rs.getDouble("precio") +
+                        " | Almacenamiento: " + rs.getInt("almacenamiento") + "GB" +
+                        " | RAM: " + rs.getInt("ram") + "GB");
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return lista;
     }
 
+    // 3. Filtrado por marca (Manteniendo tu lógica original)
     public List<celular> filtrarPorMarca(String marca) {
         List<celular> lista = new ArrayList<>();
-        String sql = "SELECT * FROM celular WHERE marca ILIKE ?"; // ILIKE es insensible a mayúsculas
+        String sql = "SELECT * FROM celular WHERE marca ILIKE ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + marca + "%");
