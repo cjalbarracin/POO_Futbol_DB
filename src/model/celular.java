@@ -14,7 +14,7 @@ public class celular {
         this.bateria = bateria;
     }
 
-    // --- ESTOS SON LOS MÉTODOS QUE TE FALTAN Y CAUSAN EL ERROR ---
+    
     public String getMarca() {
         return marca;
     }
