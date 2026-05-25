@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TiendaDAO {
 
-    // 1. Registro transaccional: Inserta en ambas tablas y vincula el ID
+    
     public void registrarCelularCompleto(celular c, inventario i) {
         String sqlCelular = "INSERT INTO celular (marca, modelo, camara, bateria) VALUES (?, ?, ?, ?)";
         String sqlInventario = "INSERT INTO inventario (celular_id, almacenamiento, precio, ram) VALUES (?, ?, ?, ?)";
@@ -17,7 +17,7 @@ public class TiendaDAO {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false); // Iniciar transacción
 
-            // Insertar celular
+            
             try (PreparedStatement ps1 = conn.prepareStatement(sqlCelular, Statement.RETURN_GENERATED_KEYS)) {
                 ps1.setString(1, c.getMarca());
                 ps1.setString(2, c.getModelo());
@@ -49,7 +49,7 @@ public class TiendaDAO {
         }
     }
 
-    // 2. Consulta unificada (JOIN): Trae toda la info de ambas tablas
+    
     public void listarInventarioCompleto() {
         String sql = "SELECT c.marca, c.modelo, i.precio, i.almacenamiento, i.ram " +
                 "FROM celular c " +
@@ -70,8 +70,7 @@ public class TiendaDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    // 3. Filtrado por marca (Manteniendo tu lógica original)
-    public List<celular> filtrarPorMarca(String marca) {
+     List<celular> filtrarPorMarca(String marca) {
         List<celular> lista = new ArrayList<>();
         String sql = "SELECT * FROM celular WHERE marca ILIKE ?";
         try (Connection conn = DBConnection.getConnection();
