@@ -6,7 +6,7 @@ public class celular {
     private int camara;
     private int bateria;
 
-    // Constructor
+    
     public celular(String marca, String modelo, int camara, int bateria) {
         this.marca = marca;
         this.modelo = modelo;
