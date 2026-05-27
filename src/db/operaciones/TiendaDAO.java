@@ -41,7 +41,7 @@ public class TiendaDAO {
                 conn.commit(); 
                 System.out.println("Registro exitoso en ambas tablas.");
             } catch (SQLException e) {
-                conn.rollback(); // Si algo falla, deshacer todo
+                conn.rollback(); 
                 throw e;
             }
         } catch (SQLException e) {
