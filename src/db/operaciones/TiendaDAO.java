@@ -29,7 +29,7 @@ public class TiendaDAO {
                 if (rs.next()) {
                     int idGenerado = rs.getInt(1);
 
-                    // Insertar inventario vinculado
+                    
                     try (PreparedStatement ps2 = conn.prepareStatement(sqlInventario)) {
                         ps2.setInt(1, idGenerado);
                         ps2.setInt(2, i.getAlmacenamiento());
