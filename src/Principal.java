@@ -19,7 +19,7 @@ public class Principal {
             System.out.print("Seleccione una opción: ");
 
             int opcion = leer.nextInt();
-            leer.nextLine(); // Limpiar el buffer
+            leer.nextLine();
 
             switch (opcion) {
                 case 1:
