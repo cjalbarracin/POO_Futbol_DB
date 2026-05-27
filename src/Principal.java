@@ -50,7 +50,7 @@ public class Principal {
         }
     }
 
-    // Método auxiliar para mantener el código limpio
+   
     private static void registrarNuevo(TiendaDAO dao, Scanner leer) {
         System.out.println("\n--- REGISTRO DE CELULAR ---");
         System.out.print("Marca: "); String marca = leer.nextLine();
