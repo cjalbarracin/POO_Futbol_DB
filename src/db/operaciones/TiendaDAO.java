@@ -38,7 +38,7 @@ public class TiendaDAO {
                         ps2.executeUpdate();
                     }
                 }
-                conn.commit(); // Confirmar ambos cambios
+                conn.commit(); 
                 System.out.println("Registro exitoso en ambas tablas.");
             } catch (SQLException e) {
                 conn.rollback(); // Si algo falla, deshacer todo
