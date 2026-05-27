@@ -1,0 +1,69 @@
+​1. Arquitectura del Proyecto
+​El flujo de información sigue una arquitectura de tres capas:
+
+[Cliente/UI] Principal.java
+      |
+      v
+[Capa DAO] TiendaDAO.java
+      |
+      v
+[Capa de Conexión] DBConnection.java <--> [Neon PostgreSQL]
+
+2. Definición de Entidades (Model)
+Las entidades son objetos inmutables que encapsulan el estado de los datos.
+
+// Ejemplo de estructura de datos (POJO)
+public class Celular {
+    private String marca;
+    private String modelo;
+    // Getters y encapsulamiento mediante constructores
+}
+
+3. Capa de Persistencia y Seguridad
+El sistema utiliza PreparedStatement para mitigar ataques de Inyección SQL. La conexión se gestiona mediante un patrón Singleton implícito en la clase DBConnection.
+Gestión de Configuración (Externalización)
+Por motivos de seguridad, las credenciales no residen en el código fuente. Se requiere un archivo config.properties en la raíz del proyecto:
+
+# Estructura del archivo de configuración
+db.url=jdbc:postgresql://<host>/<database>
+db.user=<username>
+db.pass=<password>
+
+Mecanismo de Ignoración (.gitignore)
+El archivo .gitignore asegura que las credenciales y los binarios de compilación no sean rastreados por el control de versiones:
+
+# Exclusiones de seguridad y compilación
+*.iml
+*.iws
+target/
+bin/
+config.properties  <-- Protegido de versionamiento
+.env
+
+
+4. Lógica de Negocio (Operaciones DAO)
+La clase TiendaDAO abstrae las consultas complejas. El método de filtrado, por ejemplo, utiliza el operador ILIKE para garantizar una búsqueda eficiente y flexible:
+
+-- Lógica interna de filtrado ejecutada desde Java
+SELECT * FROM celular WHERE marca ILIKE '%valor_buscado%';
+
+5. Implementación del Flujo de Ejecución (UI)
+La clase Principal actúa como el motor de estado del sistema, gestionando el ciclo de vida del programa:
+
+Inicio -> Bucle While (Menu) -> Switch (Opcion) -> Ejecución DAO -> Fin
+
+Protocolo de Registro Transaccional
+Para garantizar la integridad referencial, el registro de un nuevo dispositivo sigue una lógica de dos pasos:
+Insertar Celular: Se registra el dispositivo y se recupera el ID generado.
+Insertar Inventario: Se vincula la información técnica (RAM, Almacenamiento, Precio) al ID recuperado.
+
+
+6. Guía de Despliegue
+Requisitos: JDK 17+, IntelliJ IDEA.
+Instalación:
+Clonar el repositorio.
+Configurar el driver postgresql-42.7.12 en la configuración del módulo (.iml).
+Configuración: Crear el archivo config.properties con las credenciales de acceso.
+Ejecución: Ejecutar el método main en la clase Principal.java.
+
+
